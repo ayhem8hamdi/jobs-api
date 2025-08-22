@@ -3,6 +3,7 @@ const express=require("express");
 const app = express();
 const {connectToDB} = require("./config/db-connection");
 const {notFoundHandler,errorHandler}=  require("./middlewares/errors-middleware");
+const authRouter= require("./router/auth-router");
 
 // DataBase Connection 
 connectToDB();
@@ -13,11 +14,11 @@ app.use(express.json());
 //routes
 
 
+app.use('/api/v1',authRouter);
+
 app.use("/api/v1",(req,res,next)=>{
     res.send("Welcome to jobs api");
 });
-
-
 
 // Error + Not Found Handle
 app.use(notFoundHandler);
