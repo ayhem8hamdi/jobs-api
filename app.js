@@ -13,7 +13,7 @@ app.use(express.json());
 //routes
 
 
-app.use("/",(req,res,next)=>{
+app.use("/api/v1",(req,res,next)=>{
     res.send("Welcome to jobs api");
 });
 
