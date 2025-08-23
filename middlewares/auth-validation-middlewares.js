@@ -28,11 +28,11 @@ async function validateLogin(req,res,next){
       details: error.details.map(err => err.message), 
     });
   }
-    const tempUser= userModel.findOne(req.body.email);
+const tempUser = await userModel.findOne({ email: req.body.email });
     if (!tempUser) {
         return res.status(404).json({status:404, message : "Email Or Password Are Incorrect"});
     }
-    const isPasswordValid=comparePasswords(req.body.password,tempUser.password);
+    const isPasswordValid=await comparePasswords(req.body.password,tempUser.password);
     if (!isPasswordValid) {
         return res.status(404).json({status:404, message : "Email Or Password Are Incorrect"});
     }

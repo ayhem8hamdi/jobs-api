@@ -15,7 +15,7 @@ const register = asyncHandler(
 
 const login = asyncHandler(
   async  (req,res,next)=>{
-       const user=await userModel.findOne(req.body.email);
+       const user=await userModel.findOne({email:req.body.email});
         const jwt=user.generateToken();
         const { password, ...others } = user.toObject();
         res.status(200).json({...others , token:jwt});
