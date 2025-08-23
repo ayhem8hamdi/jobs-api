@@ -65,7 +65,7 @@ const loginValidation = Joi.object(
     .required()
     .trim(),  
     }
-); 
+).unknown(false);
 
 
 // model creation
