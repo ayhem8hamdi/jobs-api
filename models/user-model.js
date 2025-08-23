@@ -1,6 +1,7 @@
 const  Joi  = require("joi");
 const mongoose = require("mongoose");
 const {hashPassword}= require("../helper/password-hashing");
+const jwt=require("jsonwebtoken");
 
 
 // Schema 
