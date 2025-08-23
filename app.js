@@ -12,10 +12,7 @@ connectToDB();
 app.use(express.json());
 
 //routes
-
-
-app.use('/api/v1',authRouter);
-
+app.use('/api/v1/auth',authRouter);
 app.use("/api/v1",(req,res,next)=>{
     res.send("Welcome to jobs api");
 });

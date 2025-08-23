@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 
 const register = asyncHandler(
     (req,res,next)=>{
-        res.send("fake register");
+        res.send("ready to register");
     }
 );
 
