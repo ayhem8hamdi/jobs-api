@@ -1,4 +1,4 @@
-const { registerValidation } = require("../models/user-model");
+const { registerValidation,loginValidation } = require("../models/user-model");
 const {userModel}= require("../models/user-model");
 const {comparePasswords }= require("../helper/password-hashing");
 async function validateRegister(req, res, next) {
@@ -20,6 +20,14 @@ async function validateRegister(req, res, next) {
 
 
 async function validateLogin(req,res,next){
+      const { error } = loginValidation.validate(req.body, { abortEarly: false });
+  if (error) {
+    return res.status(400).json({
+      status: 400,
+      message: "Validation failed",
+      details: error.details.map(err => err.message), 
+    });
+  }
     const tempUser= userModel.findOne(req.body.email);
     if (!tempUser) {
         return res.status(404).json({status:404, message : "Email Or Password Are Incorrect"});
@@ -28,6 +36,8 @@ async function validateLogin(req,res,next){
     if (!isPasswordValid) {
         return res.status(404).json({status:404, message : "Email Or Password Are Incorrect"});
     }
+
+    next();
 }
 
 module.exports ={validateRegister,validateLogin} ;
