@@ -22,4 +22,12 @@ async function authMiddleware(req, res, next) {
   }
 }
 
-module.exports = {authMiddleware};
+
+
+async function isAuthorized(req,res,next){
+    if (! req.params.id === req.user._id) {
+        return res.status(403).json({status:403,msg:"UnAuthorized Action"});
+    }
+    next();
+}
+module.exports = {authMiddleware,isAuthorized};
