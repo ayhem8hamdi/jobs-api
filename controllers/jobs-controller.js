@@ -1,5 +1,5 @@
 const asyncHandler= require("express-async-handler");
-
+const {jobsModel,createJobValidation} = require("../models/job-model");
 
 const getAllJobs= asyncHandler(
     async (req,res,next)=>{
@@ -11,7 +11,22 @@ const getAllJobs= asyncHandler(
 
 const createNewJob= asyncHandler(
     async (req,res,next)=>{
-        res.send("New Job Created");
+
+    const { error } = createJobValidation.validate(req.body, { abortEarly: false });
+  if (error) {
+    return res.status(400).json({
+      status: 400,
+      message: "Validation failed",
+      details: error.details.map(err => err.message), 
+    });
+  }
+        req.body.createdBy= req.user._id;
+       const newJob= await jobsModel.create(req.body);
+       if (!newJob) {
+        return res.status(500).json({status:500,msg:"there was an error try again later"});
+       }
+       res.status(201).json({status:201,msg:"Job has been created successfully",newJob});
+
     }
 );
 

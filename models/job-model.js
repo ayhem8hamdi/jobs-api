@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 
 
-const jobSchema = ({
+const jobSchema =new mongoose.Schema({
     company : {
         type:String,
         required:true,
@@ -24,7 +24,7 @@ const jobSchema = ({
         required:true,
     },
 
-},{Timestamp:true});
+},{timestamps:true});
 
 
 
@@ -50,12 +50,10 @@ const createJobValidation = Joi.object({
     .messages({
       "any.only": "Status must be one of 'interview', 'pending', 'declined'",
     }),
-  createdBy: Joi.string()
-    .required()
-    .messages({
-      "string.empty": "CreatedBy (user ID) is required",
-      "any.required": "CreatedBy (user ID) is required",
-    }),
+
+}).unknown(false).required() 
+.messages({
+  "any.required": "Request body cannot be empty"
 });
 
 
@@ -77,7 +75,7 @@ const updateJobValidation = Joi.object({
     .messages({
       "any.only": "Status must be one of 'interview', 'pending', 'declined'",
     }),
-}).min(1); 
+}).min(1).unknown(false).required(); 
 
 
 // job model 
