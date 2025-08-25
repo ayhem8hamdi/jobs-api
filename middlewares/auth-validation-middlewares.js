@@ -12,7 +12,7 @@ async function validateRegister(req, res, next) {
   }
   const searchedUser=await userModel.findOne({email :req.body.email});
    if (searchedUser) {
-       return res.status(400).json({message:"User with this email already existed"});
+       return res.status(401).json({message:"User with this email already existed"});
     }
 
   next(); 
@@ -28,15 +28,14 @@ async function validateLogin(req,res,next){
       details: error.details.map(err => err.message), 
     });
   }
-const tempUser = await userModel.findOne({ email: req.body.email });
+  const tempUser = await userModel.findOne({ email: req.body.email });
     if (!tempUser) {
-        return res.status(404).json({status:404, message : "Email Or Password Are Incorrect"});
+        return res.status(401).json({status:404, message : "Email Or Password Are Incorrect"});
     }
     const isPasswordValid=await comparePasswords(req.body.password,tempUser.password);
     if (!isPasswordValid) {
-        return res.status(404).json({status:404, message : "Email Or Password Are Incorrect"});
+        return res.status(401).json({status:404, message : "Email Or Password Are Incorrect"});
     }
-
     next();
 }
 
