@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const {userModel}= require("../models/user-model");
 
-function authMiddleware(req, res, next) {
+async function authMiddleware(req, res, next) {
   const authHeader = req.headers["authorization"]; 
 
   if (!authHeader ) {
@@ -12,10 +13,13 @@ function authMiddleware(req, res, next) {
   const token = authHeader.split(" ")[1]; 
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = decoded;
+    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user= await userModel.findById(payload.userId).select("-password");
+    req.user = user;
     next();
   } catch (err) {
     return res.status(403).json({ message: "Invalid token" });
   }
 }
+
+module.exports = {authMiddleware};

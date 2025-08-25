@@ -4,6 +4,7 @@ const app = express();
 const {connectToDB} = require("./config/db-connection");
 const {notFoundHandler,errorHandler}=  require("./middlewares/errors-middleware");
 const authRouter= require("./router/auth-router");
+const jobsRouter = require("./router/jobs_router");
 
 // DataBase Connection 
 connectToDB();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 //routes
 app.use('/api/v1/auth',authRouter);
+app.use('/api/v1/jobs',jobsRouter);
 app.use("/api/v1",(req,res,next)=>{
     res.send("Welcome to jobs api");
 });
