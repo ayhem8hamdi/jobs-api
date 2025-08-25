@@ -3,10 +3,12 @@ const jwt = require("jsonwebtoken");
 function authMiddleware(req, res, next) {
   const authHeader = req.headers["authorization"]; 
 
-  if (!authHeader) {
+  if (!authHeader ) {
     return res.status(401).json({ message: "No token provided" });
   }
-
+  if (!authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "token should starts with Bearer" });
+  }
   const token = authHeader.split(" ")[1]; 
 
   try {
