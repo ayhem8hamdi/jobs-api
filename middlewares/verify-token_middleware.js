@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const {userModel}= require("../models/user-model");
+const {jobsModel}= require("../models/job-model");
 
 async function authMiddleware(req, res, next) {
   const authHeader = req.headers["authorization"]; 
@@ -25,7 +26,12 @@ async function authMiddleware(req, res, next) {
 
 
 async function isAuthorized(req,res,next){
-    if (! req.params.id === req.user._id) {
+    const tempJob= await jobsModel.findById(req.params.id);
+    if (!tempJob) {
+      return res.status(404).json({status:404,msg:'No Job Found With This Id'});
+    }
+    const userId= tempJob.createdBy;
+    if ( userId.toString() !== (req.user._id).toString()) {
         return res.status(403).json({status:403,msg:"UnAuthorized Action"});
     }
     next();
