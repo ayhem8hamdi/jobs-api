@@ -1,6 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const {userModel}= require("../models/user-model");
 
+
+
+
 const register = asyncHandler(
    async (req,res,next)=>{
        const newUser= await userModel.create(req.body);
@@ -12,6 +15,8 @@ const register = asyncHandler(
     res.status(201).json({...others , token:jwt});
     }
 );
+
+
 
 const login = asyncHandler(
   async  (req,res,next)=>{
