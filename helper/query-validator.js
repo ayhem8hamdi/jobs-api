@@ -21,13 +21,10 @@ const jobsQueryValidation = Joi.object({
     }),
 
   sort: Joi.string()
-    .valid("asc", "desc")
-    .default("asc")
+    .pattern(/^[-\w,]+$/)
     .messages({
-      "string.base": "Sort must be a string.",
-      "any.only": "Sort must be either 'asc' or 'desc'.",
+      "string.pattern.base": "Sort can only include letters, numbers, dash(-), and commas.",
     }),
-
   page: Joi.number()
     .integer()
     .min(1)
