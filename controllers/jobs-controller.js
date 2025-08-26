@@ -71,7 +71,12 @@ const updateJobById= asyncHandler(
 
 const getJobById= asyncHandler(
     async (req,res,next)=>{
-        res.send("Get Job By Id");
+       const job = await jobsModel.findById(req.params.id);
+       if (!job) {
+            return res.status(500).json({status:500,msg:'Internal Server Error'});
+       }
+           return res.status(200).json({status:200,job});
+
     }
 );
 
