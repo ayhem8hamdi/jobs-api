@@ -1,5 +1,5 @@
 const asyncHandler= require("express-async-handler");
-const {jobsModel,createJobValidation} = require("../models/job-model");
+const {jobsModel,updateJobValidation} = require("../models/job-model");
 
 const getAllJobs= asyncHandler(
     async (req,res,next)=>{
@@ -34,7 +34,16 @@ const deleteJobById= asyncHandler(
 
 const updateJobById= asyncHandler(
     async (req,res,next)=>{
-        res.send("Update Job By Id");
+
+const updatedJob = await jobsModel.findByIdAndUpdate(
+  req.params.id,
+  req.body,
+  { new: true, runValidators: true }
+);
+if (!updatedJob) {
+    return res.status(500).json({status:500,msg:'Internal Server Error'});
+}
+ return res.status(200).json({status:200,msg:'job updated successfully',updatedJob})
     }
 );
 

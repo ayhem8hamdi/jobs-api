@@ -1,4 +1,4 @@
-const {createJobValidation}= require("../models/job-model");
+const {createJobValidation,updateJobValidation}= require("../models/job-model");
 
 
 
@@ -13,4 +13,16 @@ async function addJobValidation(req, res, next) {
   }
   next(); 
 }
-module.exports = {addJobValidation}
+
+async function updateJobValidator(req,res,next) {
+        const { error } = updateJobValidation.validate(req.body, { abortEarly: false });
+  if (error) {
+    return res.status(400).json({
+      status: 400,
+      message: "Validation failed",
+      details: error.details.map(err => err.message), 
+    });
+  }
+next();
+}
+module.exports = {addJobValidation,updateJobValidator}
