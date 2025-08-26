@@ -6,7 +6,7 @@ const {addJobValidation,updateJobValidator}= require("../middlewares/job-validat
 
 
 
-router.route("/").get(getAllJobs).post(authMiddleware,addJobValidation,createNewJob)
+router.route("/").get(authMiddleware,getAllJobs).post(authMiddleware,addJobValidation,createNewJob)
 router.route("/:id").get(authMiddleware,isAuthorized,getJobById).patch(authMiddleware,isAuthorized,updateJobValidator,updateJobById).delete(authMiddleware,isAuthorized,deleteJobById)
 
 

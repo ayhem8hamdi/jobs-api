@@ -1,6 +1,9 @@
 const { registerValidation,loginValidation } = require("../models/user-model");
 const {userModel}= require("../models/user-model");
 const {comparePasswords }= require("../helper/password-hashing");
+
+
+
 async function validateRegister(req, res, next) {
   const { error } = registerValidation.validate(req.body, { abortEarly: false });
   if (error) {
