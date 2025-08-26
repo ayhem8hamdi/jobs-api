@@ -1,14 +1,17 @@
 const asyncHandler= require("express-async-handler");
 const {jobsModel} = require("../models/job-model");
-const {buildJobsFilter ,buildSort}= require("../helper/querying-logic");
+const {buildJobsFilter ,buildSort , buildPagination}= require("../helper/querying-logic");
 
 const getAllJobs= asyncHandler(
     async (req,res,next)=>{
-          const filter = buildJobsFilter(req.query);
-          const sort= buildSort(req.query.sort);
+        const filter = buildJobsFilter(req.query);
+        const sort= buildSort(req.query.sort);
+        const {  limit, skip } = buildPagination(req.query);
         const jobs = await jobsModel
         .find({ createdBy: req.user._id ,...filter})
-        .sort(sort);
+        .sort(sort)
+        .skip(skip)
+        .limit(limit);
     if (!jobs || jobs.length === 0) {
         return res.status(404).json({ message: "No jobs found" });
     }
