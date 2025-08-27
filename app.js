@@ -17,10 +17,7 @@ connectToDB();
 
 app.set('trust proxy',1)
 // Middleware
-app.use(express.json());
-app.use("/",(req,res,next)=>{
-    res.send("Welcome to jobs api");
-});
+
 
 // Security middlewares
 app.use(helmet());
@@ -36,6 +33,10 @@ app.use(limiter);
 //routes
 app.use('/api/v1/auth',authRouter);
 app.use('/api/v1/jobs',jobsRouter);
+app.use(express.json());
+app.use("/",(req,res,next)=>{
+    res.send("Welcome to jobs api");
+});
 
 // Error + Not Found Handle
 app.use(notFoundHandler);
