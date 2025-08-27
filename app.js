@@ -5,10 +5,7 @@ const {connectToDB} = require("./config/db-connection");
 const {notFoundHandler,errorHandler}=  require("./middlewares/errors-middleware");
 const authRouter= require("./router/auth-router");
 const jobsRouter = require("./router/jobs_router");
-const rateLimit = require("express-rate-limit");
-const helmet = require("helmet");
-const cors = require("cors");
-const xss = require("xss-clean");
+
 
 
 // DataBase Connection 
@@ -19,16 +16,6 @@ app.set('trust proxy',1)
 // Middleware
 
 
-// Security middlewares
-app.use(helmet());
-app.use(cors());
-app.use(xss());
-const limiter = rateLimit({
-    windowMs: 10 * 60 *1000,
-    max:100
-});
-
-app.use(limiter);
 
 //routes
 app.use('/api/v1/auth',authRouter);
