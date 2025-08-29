@@ -5,13 +5,14 @@ const {connectToDB} = require("./config/db-connection");
 const {notFoundHandler,errorHandler}=  require("./middlewares/errors-middleware");
 const authRouter= require("./router/auth-router");
 const jobsRouter = require("./router/jobs_router");
+const cors = require('cors');
 
 
 
 // DataBase Connection 
 connectToDB();
 
-
+app.use(cors());
 app.set('trust proxy',1)
 // Middleware
 app.use(express.json()); 
