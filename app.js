@@ -1,38 +1,40 @@
 require("dotenv").config();
-const express=require("express");
-const app = express();
-const {connectToDB} = require("./config/db-connection");
-const {notFoundHandler,errorHandler}=  require("./middlewares/errors-middleware");
-const authRouter= require("./router/auth-router");
+const express = require("express");
+const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const yaml = require("yamljs");
+
+const { connectToDB } = require("./config/db-connection");
+const { notFoundHandler, errorHandler } = require("./middlewares/errors-middleware");
+const authRouter = require("./router/auth-router");
 const jobsRouter = require("./router/jobs_router");
-const cors = require('cors');
 
+const swaggerDocumentation = yaml.load("./swagger.yaml");
 
-
-// DataBase Connection 
 connectToDB();
 
+const app = express();
 app.use(cors());
-app.set('trust proxy',1)
-// Middleware
-app.use(express.json()); 
-
-
-
-//routes
-app.use('/api/v1/auth',authRouter);
-app.use('/api/v1/jobs',jobsRouter);
+app.set('trust proxy', 1);
 app.use(express.json());
-app.use("/",(req,res,next)=>{
-    res.send("Welcome to jobs api");
+
+// Root route
+app.use("/", (req, res) => {
+    res.send("<h1>Jobs API</h1><br><a href='/api-docs'>Documentation</a>");
 });
 
-// Error + Not Found Handle
+// Swagger Docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
+
+// Routes
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/jobs', jobsRouter);
+
+// Error Handling
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-
-
-app.listen(process.env.PORT || 8000, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`);
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
