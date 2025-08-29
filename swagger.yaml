@@ -1,0 +1,218 @@
+openapi: 3.0.0
+info:
+  title: Jobs API
+  version: '1.0'
+servers:
+  - url: https://jobs-api-j2sh.onrender.com/api/v1
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            example:
+              username: Mugiwara
+              email: ayhemmugiwaraaaa@gmail.com
+              password: '12345678'
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login a user
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: ayhemmugiwaraaaa@gmail.com
+              password: '12345678'
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  /jobs:
+    post:
+      tags: [Jobs]
+      summary: Create New Job
+      operationId: CreateNewJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+            example:
+              company: Google
+              position: Intern
+      responses:
+        '200':
+          description: Job created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+      security:
+        - bearer: []
+
+    get:
+      tags: [Jobs]
+      summary: Get All Jobs
+      operationId: GetAllJobs
+      parameters:
+        - name: sort
+          in: query
+          description: Sort jobs by field (e.g. -company for descending)
+          required: false
+          schema:
+            type: string
+            example: -company
+      responses:
+        '200':
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+      security:
+        - bearer: []
+
+  /jobs/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: The job ID
+        schema:
+          type: string
+
+    get:
+      tags: [Jobs]
+      summary: Get Job By Id
+      operationId: GetJobById
+      responses:
+        '200':
+          description: Job details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+      security:
+        - bearer: []
+
+    patch:
+      tags: [Jobs]
+      summary: Update Job
+      operationId: UpdateJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateJobRequest'
+            example:
+              company: Amazon
+      responses:
+        '200':
+          description: Job updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+      security:
+        - bearer: []
+
+    delete:
+      tags: [Jobs]
+      summary: Delete Job By Id
+      operationId: DeleteJobById
+      responses:
+        '200':
+          description: Job deleted successfully
+      security:
+        - bearer: []
+
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    Job:
+      type: object
+      required: [company, position]
+      properties:
+        id:
+          type: string
+        company:
+          type: string
+        position:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UpdateJobRequest:
+      type: object
+      properties:
+        company:
+          type: string
+        position:
+          type: string
+
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security: []
+tags:
+  - name: Auth
+  - name: Jobs
